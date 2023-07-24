@@ -66,8 +66,23 @@
 		if($offreSections)
 			$nbSectionsOffertes += 3;
 		
-		if(($nbSections - $nbSectionsOffertes) > 0)
-			$prixNbSections = 5 * ($nbSections - $nbSectionsOffertes);
+		// Bonus - Calcul des sections liées au mois en cours
+		
+		date_default_timezone_set('UTC');
+		
+		$moisCourant = date('n'); // Récupération du mois courant sans les zéros initiaux (de 1 à 12).
+		$nbMoisReduc = 0;
+		
+		echo $moisCourant;
+		
+		for($i=1;$i<=($nbSections - $nbSectionsOffertes);++$i) // Si le numéro de la section est un multiple du mois en cours, alors le prix passera à 3€.
+			$nbMoisReduc += (($i % $moisCourant) == 0) ? 1 : 0; // Les sections offertes restent offertes, donc aucun calcul n'est appliqué dessus.
+		
+		if(($nbSections - $nbSectionsOffertes - $nbMoisReduc) > 0)
+			$prixNbSections = 5 * ($nbSections - $nbSectionsOffertes - $nbMoisReduc);
+		
+		if($nbMoisReduc >  0)
+			$prixNbSections += 3 * $nbMoisReduc;
 		
 		$prixNbSections *= $reducSections;
 		
